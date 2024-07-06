@@ -9,7 +9,6 @@ import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import Papa from 'papaparse';
 import { useRouter } from 'next/router';
-// import Data from './data.csv';
 
 
 
