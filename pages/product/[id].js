@@ -200,7 +200,7 @@ export default function Product({ data }) {
 
 
 
-            <div className="bg-gray-100 rounded-lg py-4 px-8 my-12 divide-y rounded-lg max-w-7xl mx-auto px-4">
+            <div className="bg-gray-100 py-4 px-8 my-12 divide-y rounded-lg max-w-7xl mx-auto">
               <div className="mb-8">
                 <h2 className="text-2xl font-bold text-gray-800">Frequently asked questions</h2>
               </div>
