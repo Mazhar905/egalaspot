@@ -56,7 +56,7 @@ function Header() {
     useEffect(() => {
         const fetchMenu = async () => {
             try {
-                const response = await fetch('/api/mainmenu');
+                const response = await fetch('/api/collection/getCollections');
                 if (!response.ok) {
                     throw new Error('Network response was not ok');
                 }
@@ -73,21 +73,20 @@ function Header() {
 
 
     useEffect(() => {
-        // Simulating search functionality with a timeout (replace with your actual search logic)
         const delaySearch = setTimeout(() => {
             if (searchQuery.trim().length > 0) {
-                // Replace with actual search logic or API call to fetch search results
                 const results = mainMenu.filter(item =>
                     item.name.toLowerCase().includes(searchQuery.toLowerCase())
                 );
                 setSearchResults(results);
-                setShowSearchDropdown(results.length === 1); // Show dropdown only if there is exactly one result
+                setShowSearchDropdown(results.length === 1);
             } else {
                 setSearchResults([]);
                 setShowSearchDropdown(false);
             }
-        }, 300); // Adjust delay as needed
+        }, 300);
         return () => clearTimeout(delaySearch);
+
     }, [searchQuery, mainMenu]);
 
 
@@ -124,7 +123,7 @@ function Header() {
                                 d="m190.707 180.101-47.078-47.077c11.702-14.072 18.752-32.142 18.752-51.831C162.381 36.423 125.959 0 81.191 0 36.422 0 0 36.423 0 81.193c0 44.767 36.422 81.187 81.191 81.187 19.688 0 37.759-7.049 51.831-18.751l47.079 47.078a7.474 7.474 0 0 0 5.303 2.197 7.498 7.498 0 0 0 5.303-12.803zM15 81.193C15 44.694 44.693 15 81.191 15c36.497 0 66.189 29.694 66.189 66.193 0 36.496-29.692 66.187-66.189 66.187C44.693 147.38 15 117.689 15 81.193z">
                             </path>
                         </svg>
-                        <input type='text' onChange={(e) => {handleSearchInputChange(e)}} placeholder='Search...' className="outline-none bg-transparent w-full text-sm" />
+                        <input type='text' onChange={(e) => { handleSearchInputChange(e) }} placeholder='Search...' className="outline-none bg-transparent w-full text-sm" />
                         {showSearchDropdown && (
                             <div className="absolute mt-1 w-full bg-white rounded-md shadow-lg z-10">
                                 {searchResults.map((result, index) => (
@@ -212,15 +211,19 @@ function Header() {
                                     <Image src={logo} alt="logo" className='w-36' />
                                 </Link>
                             </li>
-                            {mainMenu.map((menuItem, index) => (
+                            <li className='max-lg:border-b max-lg:px-3 max-lg:py-3 relative'>
+                                <Link href="/">
+                                    Home
+                                </Link>
+                            </li>
+                            {mainMenu.collections?.slice(0, 5).map((menuItem, index) => (
                                 <li key={index} className='max-lg:border-b max-lg:px-3 max-lg:py-3 relative'>
                                     <div
                                         onMouseEnter={() => handleMouseEnter(index)}
                                         onMouseLeave={handleMouseLeave}
                                     >
-                                        <Link href={menuItem.link} className='hover:text-[#F04725] hover:fill-[#F04725] text-gray-600 font-semibold text-[15px] block py-1'>
-                                            {menuItem.name}
-
+                                        <Link href={`collections/${menuItem.title.toLowerCase()}`} className='hover:text-[#F04725] hover:fill-[#F04725] text-gray-600 font-semibold text-[15px] block py-1'>
+                                            {menuItem.title}
                                             {menuItem.subMenu && <svg xmlns="http://www.w3.org/2000/svg" width="16px" height="16px" className="ml-1 inline-block" viewBox="0 0 24 24">
                                                 <path d="M12 16a1 1 0 0 1-.71-.29l-6-6a1 1 0 0 1 1.42-1.42l5.29 5.3 5.29-5.29a1 1 0 0 1 1.41 1.41l-6 6a1 1 0 0 1-.7.29z" />
                                             </svg>}
@@ -245,6 +248,11 @@ function Header() {
 
                                 </li>
                             ))}
+                            <li className='max-lg:border-b max-lg:px-3 max-lg:py-3 relative'>
+                                <Link href="/contact">
+                                    Contact
+                                </Link>
+                            </li>
                         </ul>
                     </div>
 

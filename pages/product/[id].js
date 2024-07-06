@@ -129,7 +129,7 @@ export default function Product({ data }) {
                   <div className="flex flex-wrap gap-4 mt-4">
                     {data.product.attributes.colors.map((color) => {
                       return (
-                        <button type="button" className={`w-12 h-12 bg-${color}-400 border-2 border-white hover:scale-105 rounded-full shrink-0`}></button>
+                        <button type="button" className={`w-12 h-12 bg-red-400 border-2 border-white hover:scale-105 rounded-full shrink-0`}></button>
                       )
                     })}
                   </div>
