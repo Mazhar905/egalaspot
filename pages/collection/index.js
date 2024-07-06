@@ -101,6 +101,34 @@ export default function page({ products }) {
 
 
 
+
+
+// export async function getServerSideProps() {
+//     try {
+//         const response = await fetch('http://localhost:3000/api/admin/product/getProducts');
+//         if (!response.ok) {
+//             throw new Error('Network response was not ok');
+//         }
+//         const data = await response.json();
+//         const products = data.products;
+//         return {
+//             props: {
+//                 products
+//             }
+//         };
+//     } catch (error) {
+//         console.error('Error fetching products:', error);
+//         return {
+//             props: {
+//                 products: []
+//             }
+//         };
+//     }
+// }
+
+
+
+
 export async function getServerSideProps() {
     try {
       const baseUrl = process.env.baseUrl;

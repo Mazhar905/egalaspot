@@ -7,7 +7,8 @@ function ProductCard({ product, itemsPerRow }) {
   const { cartItems, addToCart, removeFromCart, getCartTotal } = useContext(CartContext);
 
   // Check if product exists in cartItems
-  const cartProduct = cartItems.find(item => item._id === product._id);
+  const cartProduct = cartItems.find(item => item.id === product.id);
+  console.log(cartProduct);
 
 
 

@@ -2,6 +2,7 @@ import React , { useEffect , useState } from 'react'
 import Link from "next/link"
 import Image from 'next/image';
 import logo from "@/public/logo-icon.png"
+import SubscribeForm from './SubscribeForm';
 
 function Footer() {
 
@@ -25,6 +26,7 @@ function Footer() {
 
   return (
     <>
+    <SubscribeForm/>
       <footer className="bg-gray-800 pt-5 font-sans tracking-wide">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 px-10 py-8">
           <div>

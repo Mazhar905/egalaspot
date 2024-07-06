@@ -42,7 +42,7 @@ export default function Cart() {
                                                         <Image className="rounded-md" src={item.images[0]} width={40} height={40} alt={item.title} />
                                                     </div>
                                                     <div className="ml-4">
-                                                        <Link href={`product/${item._id}`} className="font-bold capitalize text-xs">{item.title}</Link>
+                                                        <p className="font-bold capitalize text-xs">{item.title}</p>
                                                         <p className="text-red-500 text-xs">{item.brand}</p>
                                                     </div>
                                                 </div>
