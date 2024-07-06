@@ -9,7 +9,7 @@ import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import Papa from 'papaparse';
 import { useRouter } from 'next/router';
-
+const baseUrl = process.env.baseUrl;
 
 
 export default function Products({ products }) {
@@ -62,8 +62,10 @@ export default function Products({ products }) {
       };
     });
 
+
+
     try {
-      axios.post('/api/admin/product/add/addBulkProduct', transformedData)
+      axios.post(`/api/admin/product/add/addBulkProduct`, transformedData)
         .then(response => {
           if (response.status === 200) {
             console.log('Data sent successfully:', response.data);
@@ -132,7 +134,7 @@ export default function Products({ products }) {
   const deleteSelectedProducts = async () => {
     if (selectedProductsId.length > 0) {
       try {
-        const apiUrl = `http://localhost:3000/api/admin/product/delete/deleteProducts`;
+        const apiUrl = `/api/admin/product/delete/deleteProducts`;
         const response = await axios.delete(apiUrl, {
           headers: {
             'Content-Type': 'application/json',
@@ -429,7 +431,7 @@ export default function Products({ products }) {
 
 
 export async function getServerSideProps() {
-  const baseUrl = process.env.baseUrl;
+  // const baseUrl = process.env.baseUrl;
 
   try {
     const apiUrl = `${baseUrl}/api/admin/product/getProducts`;

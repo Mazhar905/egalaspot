@@ -7,6 +7,7 @@ import React from 'react'
 import { useRouter } from 'next/router';
 import { useContext } from 'react';
 import { CartContext } from '@/context/cart';
+const baseUrl = process.env.baseUrl;
 
 export default function Product({ data }) {
 
@@ -296,7 +297,7 @@ export async function getServerSideProps(context) {
   // Extract the product ID from the URL
   const { id } = context.params;
   try {
-    const response = await fetch(`http://localhost:3000/api/product/${id}`);
+    const response = await fetch(`${baseUrl}/api/product/${id}`);
     if (!response.ok) {
       throw new Error('Network response was not ok');
     }

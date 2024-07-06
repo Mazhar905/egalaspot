@@ -65,51 +65,38 @@ export default function Collections({ collections }) {
   const BulkdeleteSelectedCollections = async () => {
     if (selectedCollectionsId.length > 0) {
       try {
-        const apiUrl = `http://localhost:3000/api/admin/collection/delete/deleteCollections`;
-        const response = await axios.delete(apiUrl, {
+        const response = await axios.delete(`/api/admin/collection/delete/deleteCollections`, {
           headers: {
             'Content-Type': 'application/json',
           },
           data: { ids: selectedCollectionsId }, // Pass data as the 'data' property in Axios for DELETE request
         });
-
         if (response.status === 200) {
 
           const { ids } = response.data;
 
           console.log(ids);
-
-          // const { message } = response.data;
-          // const updatedCollections = allCollections.filter(col => !selectedCollectionsId.includes(col._id));
-          // setAllCollections(updatedCollections);
-          // setSelectedCollectionsId([]); // Clear selected products after deletion
-          // console.log(message); // Log success message
         } else {
           console.error('Delete operation failed:', response.data.error);
         }
       } catch (error) {
         console.error('Error deleting products:', error.message);
-        // Handle error state
       }
     }
   };
-
-
 
   const deleteSelectedCollections = async () => {
     if (deleteId === "") {
       return;
     }
-  
     try {
-      const apiUrl = `http://localhost:3000/api/admin/collection/delete/deleteCollections`;
-      const response = await axios.delete(apiUrl, {
+      const response = await axios.delete(`/api/admin/collection/delete/deleteCollections`, {
         headers: {
           'Content-Type': 'application/json',
         },
         data: { ids: [deleteId] },
       });
-  
+
       if (response.status === 200) {
         const { message } = response.data;
         const updatedCollections = allCollections.filter(col => col._id !== deleteId);
@@ -125,7 +112,7 @@ export default function Collections({ collections }) {
       console.error('Error deleting collections:', error.message);
     }
   };
-  
+
 
   return (
     <>
