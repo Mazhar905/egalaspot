@@ -7,6 +7,7 @@ import React from 'react'
 import { useRouter } from 'next/router';
 import { useContext } from 'react';
 import { CartContext } from '@/context/cart';
+const baseUrl = process.env.baseUrl;
 
 export default function Product({ data }) {
 
@@ -128,7 +129,7 @@ export default function Product({ data }) {
                   <div className="flex flex-wrap gap-4 mt-4">
                     {data.product.attributes.colors.map((color) => {
                       return (
-                        <button type="button" className={`w-12 h-12 bg-${color}-400 border-2 border-white hover:scale-105 rounded-full shrink-0`}></button>
+                        <button type="button" className={`w-12 h-12 bg-red-400 border-2 border-white hover:scale-105 rounded-full shrink-0`}></button>
                       )
                     })}
                   </div>
@@ -199,7 +200,7 @@ export default function Product({ data }) {
 
 
 
-            <div className="bg-gray-100 rounded-lg py-4 px-8 my-12 divide-y rounded-lg max-w-7xl mx-auto px-4">
+            <div className="bg-gray-100 py-4 px-8 my-12 divide-y rounded-lg max-w-7xl mx-auto">
               <div className="mb-8">
                 <h2 className="text-2xl font-bold text-gray-800">Frequently asked questions</h2>
               </div>
@@ -296,7 +297,7 @@ export async function getServerSideProps(context) {
   // Extract the product ID from the URL
   const { id } = context.params;
   try {
-    const response = await fetch(`http://localhost:3000/api/product/${id}`);
+    const response = await fetch(`${baseUrl}/api/product/${id}`);
     if (!response.ok) {
       throw new Error('Network response was not ok');
     }

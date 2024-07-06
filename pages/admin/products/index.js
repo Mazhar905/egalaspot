@@ -9,8 +9,7 @@ import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import Papa from 'papaparse';
 import { useRouter } from 'next/router';
-// import Data from './data.csv';
-
+const baseUrl = process.env.baseUrl;
 
 
 export default function Products({ products }) {
@@ -28,7 +27,6 @@ export default function Products({ products }) {
   const toggleSidebarMenu = () => {
     setIsSidebarOpen(!isSidebarOpen);
   };
-
   const handleFileUpload = (e) => {
     const file = e.target.files[0];
     Papa.parse(file, {
@@ -39,32 +37,55 @@ export default function Products({ products }) {
     });
     startProgress();
   };
+
   const pushProducts = () => {
-
-
     const transformedData = data.map(d => {
+      // Split tags, colors, and sizes if they are in string format
       let tagsArray = (d.tags && typeof d.tags === 'string') ? d.tags.split("|") : [];
       let colorsArray = (d['attributes.colors'] && typeof d['attributes.colors'] === 'string') ? d['attributes.colors'].split("|") : [];
       let sizesArray = (d['attributes.sizes'] && typeof d['attributes.sizes'] === 'string') ? d['attributes.sizes'].split("|") : [];
 
+      // Split images and trim whitespace
+      let imagesArray = (d.images && typeof d.images === 'string') ? d.images.split(",").map(image => image.trim()) : [];
+
       return {
-        title: d.title,
-        description: d.description,
+        title: d.title || '',
+        description: d.description || '',
         attributes: {
           colors: colorsArray,
           sizes: sizesArray
         },
         tags: tagsArray,
-        stock: parseInt(d.stock), // Convert stock to integer
-        price: parseFloat(d.price), // Convert price to float
-        // images: d.images?.split('|').map(image => image.trim()), // Split images and trim whitespace
-        images: "https://asset.cloudinary.com/duhttpdqd/ca58df017b40df4c4fa461184aa5a3ea",
+        stock: parseInt(d.stock) || 0, // Convert stock to integer, default to 0 if not valid
+        price: parseFloat(d.price) || 0.0, // Convert price to float, default to 0.0 if not valid
+        images: imagesArray.length > 0 ? imagesArray : ["https://asset.cloudinary.com/duhttpdqd/ca58df017b40df4c4fa461184aa5a3ea"], // Default image if none provided
         status: "active"
       };
     });
 
+    // Create an object to store products by title for quick lookup
+    const productsMap = {};
+    transformedData.forEach(product => {
+      if (productsMap[product.title]) {
+        // Update existing product if title already exists
+        const existingProduct = productsMap[product.title];
+        existingProduct.tags = [...new Set([...existingProduct.tags, ...product.tags])]; // Merge tags, ensuring uniqueness
+        existingProduct.attributes.colors = [...new Set([...existingProduct.attributes.colors, ...product.attributes.colors])]; // Merge colors, ensuring uniqueness
+        existingProduct.attributes.sizes = [...new Set([...existingProduct.attributes.sizes, ...product.attributes.sizes])]; // Merge sizes, ensuring uniqueness
+        existingProduct.stock += product.stock; // Add stock
+        existingProduct.price = product.price; // Update price
+        existingProduct.images = [...new Set([...existingProduct.images, ...product.images])]; // Merge images, ensuring uniqueness
+      } else {
+        // Add new product to the map
+        productsMap[product.title] = product;
+      }
+    });
+
+    // Convert productsMap object back to an array of products
+    const updatedProducts = Object.values(productsMap);
+
     try {
-      axios.post('/api/admin/product/add/addBulkProduct', transformedData)
+      axios.post(`/api/admin/product/add/addBulkProduct`, updatedProducts)
         .then(response => {
           if (response.status === 200) {
             console.log('Data sent successfully:', response.data);
@@ -81,7 +102,7 @@ export default function Products({ products }) {
       setShowModal(false);
       setProgress(0)
     }
-  }
+  };
 
   const startProgress = () => {
     let currentProgress = 0;
@@ -133,7 +154,7 @@ export default function Products({ products }) {
   const deleteSelectedProducts = async () => {
     if (selectedProductsId.length > 0) {
       try {
-        const apiUrl = `http://localhost:3000/api/admin/product/delete/deleteProducts`;
+        const apiUrl = `/api/admin/product/delete/deleteProducts`;
         const response = await axios.delete(apiUrl, {
           headers: {
             'Content-Type': 'application/json',
@@ -430,7 +451,7 @@ export default function Products({ products }) {
 
 
 export async function getServerSideProps() {
-  const baseUrl = process.env.baseUrl;
+  // const baseUrl = process.env.baseUrl;
 
   try {
     const apiUrl = `${baseUrl}/api/admin/product/getProducts`;

@@ -4,7 +4,7 @@
       "link": "/"
     },
     {
-      "name": "Categoreies",
+      "name": "Collections",
       "link": "/collection",
       "subMenu": [
         {
@@ -24,10 +24,6 @@
           "link": "/collection/"
         }
       ]
-    },
-    {
-      "name": "About Us",
-      "link": "/contact"
     },
     {
       "name": "Contact",

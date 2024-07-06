@@ -544,7 +544,8 @@ export default function Home({products}) {
 
 export async function getServerSideProps() {
   try {
-    const response = await fetch('http://localhost:3000/api/admin/product/getProducts');
+    const baseUrl = process.env.baseUrl;
+    const response = await fetch(`${baseUrl}/api/admin/product/getProducts`);
     if (!response.ok) {
       throw new Error('Network response was not ok');
     }
