@@ -268,7 +268,7 @@ export default function Collections({ collections }) {
                             </label>
                           </td>
 
-                          <td className="py-2 p-3 text-sm text-gray-800 capitalize">{collection.title}</td>
+                          <td className="py-2 p-3 text-sm text-gray-800 capitalize"><Link href={`/collections/${collection.title.toLowerCase()}`}>{collection.title}</Link></td>
                           <td className="py-2 p-3 text-center text-sm text-gray-800">10</td>
                           <td className="py-2 p-3 text-center text-sm text-gray-800">
                             <span className={`w-[68px] mx-auto block text-center py-1 ${collection.activeStatus === true ? "border border-green-500 text-green-600" : "border border-red-500 text-red-600"}  rounded text-xs`}>

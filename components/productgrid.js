@@ -6,7 +6,7 @@ function ProductGrid({ products, limit, itemsPerRow }) {
   return (
     <>
       <div className="mx-auto lg:max-w-6xl md:max-w-4xl">
-        <div className="flex flex-wrap pb-10 justify-start w-full items-stretch">
+        <div className="flex flex-wrap justify-start w-full items-stretch">
           {/* Map over the limited products array */}
           {products.length > 0 && (
             products.map((product) => (

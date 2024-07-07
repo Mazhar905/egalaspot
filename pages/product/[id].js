@@ -187,20 +187,20 @@ export default function Product({ data }) {
 
               <div className="mt-8">
                 <h3 className="text-lg font-bold text-gray-800">Product Description</h3>
-                <p className="text-sm text-gray-400 mt-4">{data.description}</p>
+                <p className="text-sm text-gray-400 mt-4">{data.product.description}</p>
               </div>
 
-              <ul className="space-y-3 list-disc mt-6 pl-4 text-sm text-gray-400">
+              {/* <ul className="space-y-3 list-disc mt-6 pl-4 text-sm text-gray-400">
                 <li>A gray t-shirt is a wardrobe essential because it is so versatile.</li>
                 <li>Available in a wide range of sizes, from extra small to extra large, and even in tall and petite sizes.</li>
                 <li>This is easy to care for. They can usually be machine-washed and dried on low heat.</li>
                 <li>You can add your own designs, paintings, or embroidery to make it your own.</li>
-              </ul>
+              </ul> */}
             </div>
 
 
 
-            <div className="bg-gray-100 py-4 px-8 my-12 divide-y rounded-lg max-w-7xl mx-auto">
+            <div className="bg-gray-100 pt-4 px-8 mt-12 divide-y rounded-lg max-w-7xl mx-auto">
               <div className="mb-8">
                 <h2 className="text-2xl font-bold text-gray-800">Frequently asked questions</h2>
               </div>

@@ -408,7 +408,7 @@ export default function Products({ products }) {
                               className="w-10 h-10 rounded-md"
                             />
                           </td>
-                          <td className="py-2 capitalize p-3 text-sm text-gray-800">{product.title}</td>
+                          <td className="py-2 capitalize p-3 text-sm text-gray-800"><Link href={`/product/${product._id.toLowerCase()}`}>{product.title}</Link></td>
                           <td className="py-2 p-3 text-sm text-gray-800">
                             <span className="w-[68px] block text-center py-1 border border-green-500 text-green-600 rounded text-xs">
                               {product.status === "active" ? "Active" : "Draft"}
