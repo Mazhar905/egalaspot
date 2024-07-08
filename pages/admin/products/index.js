@@ -23,6 +23,27 @@ export default function Products({ products }) {
   const [selectedProductsId, setSelectedProductsId] = useState([]);
   const [progress, setProgress] = useState(0);
   const router = useRouter();
+  const [productsUploading, setProductsUploading] = useState(false);
+  const [productPagination, setProductPagination] = useState({
+    page: 1,
+    offset: 0,
+    limit: 100
+  });
+  const [showWarnModal, setShowWarnModal] = useState(false);
+  const [deleteId, setDeleteId] = useState("");
+
+  const currentPage = productPagination.page; // Assuming you have the current page index
+  const totalPages = Math.ceil(products.length / productPagination.limit);
+
+  const handleClickPage = (page) => {
+    const newOffset = (page - 1) * productPagination.limit;
+    setProductPagination({
+      ...productPagination,
+      page: page,
+      offset: newOffset
+    });
+  };
+
 
   const toggleSidebarMenu = () => {
     setIsSidebarOpen(!isSidebarOpen);
@@ -83,25 +104,49 @@ export default function Products({ products }) {
 
     // Convert productsMap object back to an array of products
     const updatedProducts = Object.values(productsMap);
+    const chunkSize = 350;
+    const totalProducts = updatedProducts.length;
+    let currentIndex = 0;
+    setProductsUploading(true);
 
-    try {
-      axios.post(`/api/admin/product/add/addBulkProduct`, updatedProducts)
-        .then(response => {
-          if (response.status === 200) {
-            console.log('Data sent successfully:', response.data);
-            router.push("/admin/products");
-          }
-        })
-        .catch(error => {
-          console.error('Error sending data:', error);
-          // Optionally, handle errors and display error messages
-        });
-    } catch (error) {
-      console.log(`Api Error ${error}`);
-    } finally {
-      setShowModal(false);
-      setProgress(0)
+    function sendProductsChunk() {
+      const chunk = updatedProducts.slice(currentIndex, currentIndex + chunkSize);
+
+      try {
+        axios.post(`/api/admin/product/add/addBulkProduct`, chunk)
+          .then(response => {
+            if (response.status === 200) {
+              console.log(`Chunk ${currentIndex / chunkSize + 1} sent successfully.`);
+              currentIndex += chunkSize;
+
+              // Check if there are more products to send
+              if (currentIndex < totalProducts) {
+                sendProductsChunk();
+              } else {
+                console.log('All Products sent successfully.');
+                router.push("/admin/products");
+              }
+            }
+          })
+          .catch(error => {
+            console.error(`Error sending products: `, error);
+            // Optionally, handle errors and display error messages
+          })
+          .finally(() => {
+            setProductsUploading(false);
+            const progress = Math.min(100, (currentIndex / totalProducts) * 100);
+            setProgress(progress);
+          });
+      } catch (error) {
+        console.log(`API Error ${error}`);
+      } finally {
+        setShowModal(false);
+      }
     }
+
+    // Start sending the first chunk
+    sendProductsChunk();
+
   };
 
   const startProgress = () => {
@@ -151,7 +196,7 @@ export default function Products({ products }) {
       setSelectedProductsId(productIds);
     }
   };
-  const deleteSelectedProducts = async () => {
+  const BulkdeleteSelectedProducts = async () => {
     if (selectedProductsId.length > 0) {
       try {
         const apiUrl = `/api/admin/product/delete/deleteProducts`;
@@ -182,8 +227,90 @@ export default function Products({ products }) {
 
 
 
+  const deleteSelectedProducts = async () => {
+    if (deleteId === "") {
+      return;
+    }
+    console.log(deleteId);
+    try {
+      const response = await axios.delete(`/api/admin/product/delete/deleteProducts`, {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        data: { ids: [deleteId] },
+      });
+
+      if (response.status === 200) {
+        const { message } = response.data;
+        const updatedCollections = allCollections.filter(col => col._id !== deleteId);
+        setAllCollections(updatedCollections);
+        setSelectedCollectionsId([]); // Clear selected collections after deletion
+        setShowWarnModal(false);
+        setDeleteId("");
+        console.log(message); // Log success message
+      } else {
+        console.error('Delete operation failed:', response.data.error);
+      }
+    } catch (error) {
+      console.error('Error deleting collections:', error.message);
+    }
+  };
+
+
+
+
+
   return (
     <>
+
+
+{showWarnModal ? (
+        <>
+          <div className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none"
+          >
+            <div className="relative w-auto my-6 mx-auto max-w-3xl">
+              {/*content*/}
+              <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none">
+                {/*header*/}
+                <div className="relative flex items-start justify-between p-5 border-b border-solid border-blueGray-200 rounded-t">
+                  <h3 className="text-xl w-5/6 text-left font-semibold capitalize">
+                    Do you want to delete this product?
+                  </h3>
+                  <button
+                    className="top-0 right-0 z-50 absolute p-1 ml-auto bg-transparent border-0 text-black float-right text-3xl leading-none font-semibold outline-none focus:outline-none"
+                    onClick={() => setShowWarnModal(false)}
+                  >
+                    <span className="bg-transparent text-black h-6 w-6 text-2xl block outline-none focus:outline-none">
+                      ×
+                    </span>
+                  </button>
+                </div>
+
+                {/*footer*/}
+                <div className="flex items-center justify-end p-6 border-t border-solid border-blueGray-200 rounded-b">
+                  <button
+                    className="text-red-500 background-transparent font-bold uppercase px-6 py-2 text-sm outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+                    type="button"
+                    onClick={() => setShowWarnModal(false)}
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    className="bg-red-500 text-white active:bg-red-600 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+                    type="button"
+                    onClick={() => deleteSelectedCollections()}
+                  >
+                    Yes
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className="opacity-25 fixed inset-0 z-40 bg-black"></div>
+        </>
+      ) : null}
+
+      
       <div className="flex h-screen overflow-y-hidden bg-white">
         <Loading />
         <Sidebar isSidebarOpen={isSidebarOpen} toggleSidebarMenu={toggleSidebarMenu} />
@@ -327,7 +454,7 @@ export default function Products({ products }) {
                   Draft
                 </button>
                 <div className={`p-3 text-right flex-grow flex items-center justify-end text-sm cursor-pointer font-semibold  ${selectedProductsId.length > 0 ? "text-gray-800" : "hidden"}`}>
-                  <svg xmlns="http://www.w3.org/2000/svg" onClick={() => { deleteSelectedProducts() }} fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-4">
+                  <svg xmlns="http://www.w3.org/2000/svg" onClick={() => { BulkdeleteSelectedProducts() }} fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-4">
                     <path stroke-linecap="round" stroke-linejoin="round" d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" />
                   </svg>
                 </div>
@@ -362,14 +489,14 @@ export default function Products({ products }) {
                     <th className="p-3 text-left text-sm font-semibold text-gray-800">
                       Price
                     </th>
-                    <th className="p-3 text-left text-sm font-semibold text-gray-800">
+                    <th className="p-3 text-right text-sm font-semibold text-gray-800">
                       Action
                     </th>
                   </tr>
                 </thead>
 
                 <tbody className="whitespace-nowrap">
-                  {allProducts?.map((product, index) => {
+                  {allProducts.slice(productPagination.offset, productPagination.offset + productPagination.limit)?.map((product, index) => {
                     return (
                       <>
                         <tr key={index + 1} className="odd:bg-gray-50">
@@ -416,15 +543,18 @@ export default function Products({ products }) {
                           </td>
                           <td className="py-2 p-3 text-sm text-gray-800">{product.price}</td>
                           <td className="p-4">
-                            <svg
-                              xmlns="http://www.w3.org/2000/svg"
-                              className="w-5 h-5 cursor-pointer fill-gray-500 rotate-90"
-                              viewBox="0 0 24 24"
-                            >
-                              <circle cx="12" cy="12" r="2" data-original="#000000" />
-                              <circle cx="4" cy="12" r="2" data-original="#000000" />
-                              <circle cx="20" cy="12" r="2" data-original="#000000" />
-                            </svg>
+                          <div className="flex items-center justify-end space-x-2">
+                              <button className="bg-transparent border-none">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-5 text-gray-500">
+                                  <path stroke-linecap="round" stroke-linejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L6.832 19.82a4.5 4.5 0 0 1-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 0 1 1.13-1.897L16.863 4.487Zm0 0L19.5 7.125" />
+                                </svg>
+                              </button>
+                              <button className="bg-transparent border-none" onClick={() => { setDeleteId(product._id); setShowWarnModal(true) }}>
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-5 text-gray-500">
+                                  <path stroke-linecap="round" stroke-linejoin="round" d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" />
+                                </svg>
+                              </button>
+                            </div>
                           </td>
                         </tr>
                       </>
@@ -432,12 +562,51 @@ export default function Products({ products }) {
                   })}
                   {allProducts.length == 0 && <tr><td colspan='6'><h1 className='text-center p-3'>No Products Found</h1></td></tr>}
                 </tbody>
-
-
               </table>
 
 
             </div>
+            {products.length > productPagination.limit &&
+              <ul className="my-10 flex space-x-4 justify-end">
+                {currentPage > 1 &&
+                  <li onClick={() => handleClickPage(1)} className="flex items-center justify-center shrink-0 hover:bg-gray-50 border-2 cursor-pointer w-10 h-10 rounded-full" >
+                    <svg xmlns="http://www.w3.org/2000/svg" className="w-3 fill-gray-400" viewBox="0 0 55.753 55.753">
+                      <path
+                        d="M12.745 23.915c.283-.282.59-.52.913-.727L35.266 1.581a5.4 5.4 0 0 1 7.637 7.638L24.294 27.828l18.705 18.706a5.4 5.4 0 0 1-7.636 7.637L13.658 32.464a5.367 5.367 0 0 1-.913-.727 5.367 5.367 0 0 1-1.572-3.911 5.369 5.369 0 0 1 1.572-3.911z"
+                        data-original="#000000" />
+                    </svg>
+                  </li>
+                }
+                <ul className="flex space-x-2">
+                  {/* Previous page button */}
+                  {currentPage > 1 && (
+                    <li onClick={() => handleClickPage(currentPage - 1)} className="flex items-center justify-center flex-shrink-0 border border-red-500 !text-red-500 cursor-pointer text-base font-bold w-10 h-10 rounded-full">
+                      {currentPage - 1}
+                    </li>
+                  )}
+
+                  {/* Current page button */}
+                  <li onClick={() => handleClickPage(currentPage)} className="flex items-center justify-center flex-shrink-0 bg-orange-500 border-2 border-orange-500 cursor-pointer text-base font-bold text-white w-10 h-10 rounded-full">
+                    {currentPage}
+                  </li>
+
+                  {/* Next page button */}
+                  {currentPage < totalPages && (
+                    <li onClick={() => handleClickPage(currentPage + 1)} className="flex items-center justify-center flex-shrink-0 border border-red-500 !text-red-500 cursor-pointer text-base font-bold w-10 h-10 rounded-full">
+                      {currentPage + 1}
+                    </li>
+                  )}
+                </ul>
+                {currentPage < totalPages &&
+                <li onClick={() => handleClickPage(totalPages)} className="flex items-center justify-center shrink-0 hover:bg-gray-50 border-2 cursor-pointer w-10 h-10 rounded-full">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="w-3 fill-gray-400 rotate-180" viewBox="0 0 55.753 55.753">
+                    <path
+                      d="M12.745 23.915c.283-.282.59-.52.913-.727L35.266 1.581a5.4 5.4 0 0 1 7.637 7.638L24.294 27.828l18.705 18.706a5.4 5.4 0 0 1-7.636 7.637L13.658 32.464a5.367 5.367 0 0 1-.913-.727 5.367 5.367 0 0 1-1.572-3.911 5.369 5.369 0 0 1 1.572-3.911z"
+                      data-original="#000000" />
+                  </svg>
+                </li>}
+              </ul>
+            }
           </main>
 
 

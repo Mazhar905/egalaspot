@@ -205,19 +205,19 @@ function Header() {
                         </button>
 
                         <ul
-                            className='lg:flex lg:gap-x-10 max-lg:space-y-3 max-lg:fixed max-lg:bg-white max-lg:w-2/3 max-lg:min-w-[300px] max-lg:top-0 max-lg:left-0 max-lg:p-4 max-lg:h-full max-lg:shadow-md max-lg:overflow-auto z-50'>
-                            <li className='max-lg:border-b max-lg:pb-4 px-3 lg:hidden'>
+                            className='items-center lg:flex lg:gap-x-10 max-lg:space-y-3 max-lg:fixed max-lg:bg-white max-lg:w-2/3 max-lg:min-w-[300px] max-lg:top-0 max-lg:left-0 max-lg:p-4 max-lg:h-full max-lg:shadow-md max-lg:overflow-auto z-50'>
+                            <li className='outline-none max-lg:border-b max-lg:pb-4 px-3 lg:hidden'>
                                 <Link href="/">
                                     <Image src={logo} alt="logo" className='w-36' />
                                 </Link>
                             </li>
-                            <li className='max-lg:border-b max-lg:px-3 max-lg:py-3 relative'>
+                            <li className='outline-none max-lg:border-b max-lg:px-3 max-lg:py-3 relative'>
                                 <Link href="/">
                                     Home
                                 </Link>
                             </li>
                             {mainMenu.collections?.slice(0, 5).map((menuItem, index) => (
-                                <li key={index} className='max-lg:border-b max-lg:px-3 max-lg:py-3 relative'>
+                                <li key={index} className='outline-none max-lg:border-b max-lg:px-3 max-lg:py-3 relative'>
                                     <div
                                         onMouseEnter={() => handleMouseEnter(index)}
                                         onMouseLeave={handleMouseLeave}
@@ -237,18 +237,14 @@ function Header() {
                                                         <Link href={subMenuItem.link} className='hover:text-[#F04725] hover:fill-[#F04725] text-gray-600 font-semibold text-[15px] block'>
                                                             {subMenuItem.name}
                                                         </Link>
-
                                                     </li>
                                                 ))}
                                             </ul>
                                         )}
-
-
                                     </div>
-
                                 </li>
                             ))}
-                            <li className='max-lg:border-b max-lg:px-3 max-lg:py-3 relative'>
+                            <li className='outline-none max-lg:border-b max-lg:px-3 max-lg:py-3 relative'>
                                 <Link href="/contact">
                                     Contact
                                 </Link>

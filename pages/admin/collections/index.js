@@ -127,7 +127,7 @@ export default function Collections({ collections }) {
                 {/*header*/}
                 <div className="relative flex items-start justify-between p-5 border-b border-solid border-blueGray-200 rounded-t">
                   <h3 className="text-xl w-5/6 text-left font-semibold capitalize">
-                    Do you want to delete this product?
+                    Do you want to delete this Collection?
                   </h3>
                   <button
                     className="top-0 right-0 z-50 absolute p-1 ml-auto bg-transparent border-0 text-black float-right text-3xl leading-none font-semibold outline-none focus:outline-none"

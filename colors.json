@@ -1,0 +1,24 @@
+[
+    {
+        "WHITE": "bg-white",
+        "BRIGHT PINK": "bg-pink-500",
+        "YELLOW": "bg-yellow-500",
+        "SAND": "bg-yellow-200",
+        "CAROLINA BLUE": "bg-blue-400",
+        "CHOCOLATE": "bg-brown-600",
+        "LIME GREEN": "bg-green-400",
+        "KELLY GREEN": "bg-green-500",
+        "CHARCOAL": "bg-gray-800",
+        "FOREST GREEN": "bg-green-600",
+        "ASH": "bg-gray-300",
+        "DARK ASH": "bg-gray-600",
+        "BLACK": "bg-black",
+        "RED": "bg-red-500",
+        "ROYAL": "bg-blue-700",
+        "NAVY": "bg-blue-900",
+        "BRIGHT ORANGE": "bg-orange-500",
+        "PURPLE": "bg-purple-500",
+        "GOLD": "bg-yellow-500",
+        "BURGUNDY": "bg-red-800"
+    }
+]

@@ -6,6 +6,7 @@ import Image from 'next/image';
 import React from 'react'
 import { useRouter } from 'next/router';
 import { useContext } from 'react';
+import colorsData from '@/colors.json';
 import { CartContext } from '@/context/cart';
 const baseUrl = process.env.baseUrl;
 
@@ -15,19 +16,32 @@ export default function Product({ data }) {
   const [quantity, setQuantity] = useState(1);
   const [loadingCartButton, setLoadingCartButton] = useState(false); // State to manage loading spinner
   const { addToCart, cartItems } = useContext(CartContext);
-  const [activeColor, setActiveColor] = useState("");
+  const [selectedColor, setSelectedColor] = useState("");
+  const [selectedSize, setSelectedSize] = useState("");
+
 
   const router = useRouter();
 
 
 
   const addToCartOperator = () => {
+    const product = { ...data.product };
+  
+    const updatedAttributes = { ...product.attributes };
+  
+    updatedAttributes.colors = selectedColor;
+    updatedAttributes.sizes = selectedSize;
+  
+    const updatedProduct = { ...product, attributes: updatedAttributes };
+  
     setLoadingCartButton(true);
-    addToCart(data.product, quantity); // Pass quantity to addToCart
+    addToCart(updatedProduct, quantity);
     setTimeout(() => {
       setLoadingCartButton(false);
     }, 1000);
   }
+  
+  
 
 
 
@@ -43,7 +57,7 @@ export default function Product({ data }) {
 
   return (
     <>
-      {data.product.length !== 0 && (
+      {data.product && (
         <>
           <Header />
           <div className="p-6 lg:max-w-7xl max-w-2xl max-lg:mx-auto">
@@ -119,7 +133,16 @@ export default function Product({ data }) {
                   <h3 className="text-lg font-bold text-gray-800">Choose a Size</h3>
                   <div className="flex flex-wrap gap-4 mt-4">
                     {data.product.attributes.sizes.map((size) => {
-                      return <button type="button" className="w-12 h-12 border-2 font-semibold text-sm rounded-full flex items-center  hover:scale-105 justify-center shrink-0">{size}</button>
+                      return (
+                        <button
+                          type="button"
+                          className={`p-2 w-11 border-black border hover:scale-105 shrink-0 ${selectedSize === size ? "bg-red-500 text-white border-red-500" : ""}`}
+                          onClick={() => setSelectedSize(size)}
+                        >
+                          {size}
+                        </button>
+
+                      )
                     })}
                   </div>
                 </div>
@@ -129,7 +152,12 @@ export default function Product({ data }) {
                   <div className="flex flex-wrap gap-4 mt-4">
                     {data.product.attributes.colors.map((color) => {
                       return (
-                        <button type="button" className={`w-12 h-12 bg-red-400 border-2 border-white hover:scale-105 rounded-full shrink-0`}></button>
+                        <button
+                          type="button"
+                          className={`p-2 ${colorsData[color]} border-black border hover:scale-105 shrink-0 ${selectedColor === color ? "bg-red-500 text-white border-red-500" : ""}`}
+                          onClick={() => setSelectedColor(color)}
+                        >
+                        </button>
                       )
                     })}
                   </div>
@@ -156,11 +184,11 @@ export default function Product({ data }) {
                   </div>
                   <button
                     type="button"
-                    onClick={() => { addToCartOperator() }}
+                    onClick={addToCartOperator}
                     className="min-w-[200px] px-4 py-2.5 border border-gray-800 bg-transparent hover:bg-gray-50 text-gray-800 text-sm font-semibold rounded"
-                    disabled={loadingCartButton} // Disable button while loading
+                    disabled={!selectedColor || !selectedSize || loadingCartButton}
                   >
-                    {loadingCartButton ? ( // Conditional rendering of spinner or text based on loading state
+                    {loadingCartButton ? (
                       <div role="status" className='mx-auto'>
                         <svg aria-hidden="true" className="mx-auto w-8 h-8 text-gray-200 animate-spin dark:text-gray-600 fill-orange-600" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
                           <path d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z" fill="currentColor" />
@@ -172,6 +200,7 @@ export default function Product({ data }) {
                       "ADD TO CART"
                     )}
                   </button>
+                  {/*  */}
                   <button type="button" className="min-w-[200px] px-4 py-3 bg-gray-800 hover:bg-gray-900 text-white text-sm font-semibold rounded">BUY NOW</button>
                 </div>
               </div>
