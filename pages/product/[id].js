@@ -26,22 +26,22 @@ export default function Product({ data }) {
 
   const addToCartOperator = () => {
     const product = { ...data.product };
-  
+
     const updatedAttributes = { ...product.attributes };
-  
+
     updatedAttributes.colors = selectedColor;
     updatedAttributes.sizes = selectedSize;
-  
+
     const updatedProduct = { ...product, attributes: updatedAttributes };
-  
+
     setLoadingCartButton(true);
     addToCart(updatedProduct, quantity);
     setTimeout(() => {
       setLoadingCartButton(false);
     }, 1000);
   }
-  
-  
+
+
 
 
 
@@ -60,7 +60,7 @@ export default function Product({ data }) {
       {data.product && (
         <>
           <Header />
-          <div className="p-6 lg:max-w-7xl max-w-2xl max-lg:mx-auto">
+          <div className="p-6 lg:max-w-7xl max-w-2xl mx-auto">
             <div className="grid items-start grid-cols-1 lg:grid-cols-2 gap-10">
               <div className="w-full flex-col-reverse lg:flex-row lg:items-start flex lg:sticky top-0 text-center">
                 <div className="flex flex-wrap flex-row lg:flex-col gap-x-8 gap-y-6 justify-center mx-auto mt-4">
@@ -150,18 +150,18 @@ export default function Product({ data }) {
                 <div>
                   <h3 className="text-lg font-bold text-gray-800">Choose a Color</h3>
                   <div className="flex flex-wrap gap-4 mt-4">
-                    {data.product.attributes.colors.map((color) => {
-                      return (
-                        <button
-                          type="button"
-                          className={`p-2 ${colorsData[color]} border-black border hover:scale-105 shrink-0 ${selectedColor === color ? "bg-red-500 text-white border-red-500" : ""}`}
-                          onClick={() => setSelectedColor(color)}
-                        >
-                        </button>
-                      )
-                    })}
+                    {data.product.attributes.colors.map((colorName, index) => (
+                      <button
+                        key={index}
+                        type="button"
+                        className={`p-2 w-10 h-10 rounded-full ${colorsData[colorName]} border hover:scale-105 shrink-0 ${selectedColor === colorName ? "bg-red-500 text-white border-red-500" : ""}`}
+                        onClick={() => setSelectedColor(colorName)}
+                      >
+                      </button>
+                    ))}
                   </div>
                 </div>
+
 
                 <hr className="my-8" />
                 <div className="flex flex-col flex-wrap gap-4">
