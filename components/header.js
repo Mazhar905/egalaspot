@@ -212,22 +212,17 @@ function Header() {
                                 </Link>
                             </li>
                             <li className='capitalize outline-none max-lg:border-b max-lg:px-3 max-lg:py-3 relative'>
-                                <Link href="/">
-                                    Home
-                                </Link>
-                            </li>
-                            <li className='capitalize outline-none max-lg:border-b max-lg:px-3 max-lg:py-3 relative'>
                                 <Link href="/product">
                                     Products
                                 </Link>
                             </li>
-                            {mainMenu.collections?.slice(0, 5).map((menuItem, index) => (
+                            {mainMenu.collections?.slice(0, 10).map((menuItem, index) => (
                                 <li key={index} className='capitalize outline-none max-lg:border-b max-lg:px-3 max-lg:py-3 relative'>
                                     <div
                                         onMouseEnter={() => handleMouseEnter(index)}
                                         onMouseLeave={handleMouseLeave}
                                     >
-                                        <Link href={`collections/${menuItem.title.toLowerCase()}`} className='hover:text-[#F04725] hover:fill-[#F04725] text-gray-600 font-semibold text-[15px] block py-1'>
+                                        <Link href={`/collection/${menuItem.title.toLowerCase()}`} className='hover:text-[#F04725] hover:fill-[#F04725] text-gray-600 font-semibold text-[15px] block py-1'>
                                             {menuItem.title}
                                             {menuItem.subMenu && <svg xmlns="http://www.w3.org/2000/svg" width="16px" height="16px" className="ml-1 inline-block" viewBox="0 0 24 24">
                                                 <path d="M12 16a1 1 0 0 1-.71-.29l-6-6a1 1 0 0 1 1.42-1.42l5.29 5.3 5.29-5.29a1 1 0 0 1 1.41 1.41l-6 6a1 1 0 0 1-.7.29z" />

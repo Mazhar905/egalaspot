@@ -229,9 +229,9 @@ return (
 
                                     </div>
                                     <div className="w-full px-4 mt-10">
-                                        <p class="flex items-center mr-4 text-sm font-medium mb-3 text-gray-900 dark:text-gray-300">Status <p className='capitalize ms-2'>({activeStatus ? 'active' : 'draft'})</p></p>
-                                        <div class="flex flex-row items-center space-x-5">
-                                            <label class="relative cursor-pointer">
+                                        <p className="flex items-center mr-4 text-sm font-medium mb-3 text-gray-900 dark:text-gray-300">Status <p className='capitalize ms-2'>({activeStatus ? 'active' : 'draft'})</p></p>
+                                        <div className="flex flex-row items-center space-x-5">
+                                            <label className="relative cursor-pointer">
                                                 <input
                                                     type="checkbox"
                                                     checked={activeStatus} // Bind checked attribute to activeStatus
@@ -239,7 +239,7 @@ return (
                                                     className="sr-only peer" // Hide default checkbox and use peer for styling
                                                 />
                                                 <div
-                                                    class="w-11 h-6 flex items-center bg-gray-300 rounded-full peer peer-checked:after:translate-x-full after:absolute after:left-[2px] peer-checked:after:border-white after:bg-white after:border after:border-gray-300 after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-red-500">
+                                                    className="w-11 h-6 flex items-center bg-gray-300 rounded-full peer peer-checked:after:translate-x-full after:absolute after:left-[2px] peer-checked:after:border-white after:bg-white after:border after:border-gray-300 after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-red-500">
                                                 </div>
                                             </label>
 

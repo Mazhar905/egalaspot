@@ -10,7 +10,7 @@ import Loading from '../admin/components/loading';
 import axios from 'axios';
 
 export default function page({ products }) {
-    
+
 
     return (
         <>
@@ -23,20 +23,10 @@ export default function page({ products }) {
                     </div>
                     <h1 className='text-white text-3xl capitalize absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2'>Collection</h1>
                 </div>
-
                 <div className="flex flex-wrap flex-col items-start lg:flex-row">
-
                     <div className="main w-full">
-
-
                         <TopProducts products={products} limit={3000} sectionName="All Collections" />
-
-                       
-
                     </div>
-
-
-
                 </div>
             </div >
 

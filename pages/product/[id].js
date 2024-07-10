@@ -14,7 +14,7 @@ export default function Product({ data }) {
 
   const [activeImage, setActiveImage] = useState(0);
   const [quantity, setQuantity] = useState(1);
-  const [loadingCartButton, setLoadingCartButton] = useState(false); // State to manage loading spinner
+  const [loadingCartButton, setLoadingCartButton] = useState(false);
   const { addToCart, cartItems } = useContext(CartContext);
   const [selectedColor, setSelectedColor] = useState("");
   const [selectedSize, setSelectedSize] = useState("");
@@ -51,7 +51,7 @@ export default function Product({ data }) {
     if (cart) {
       setQuantity(cart.quantity);
     }
-  }, [cartItems]); // <-- Include cartItems here
+  }, [cartItems]);
 
 
 
@@ -154,7 +154,7 @@ export default function Product({ data }) {
                       <button
                         key={index}
                         type="button"
-                        className={`p-2 w-10 h-10 rounded-full ${colorsData[colorName]} border hover:scale-105 shrink-0 ${selectedColor === colorName ? "bg-red-500 text-white border-red-500" : ""}`}
+                        className={`p-2 w-10 h-10 rounded-full ${colorsData[colorName]} border hover:scale-125 shrink-0 ${selectedColor === colorName ? "border-2 border-black shadow-xl scale-125" : ""}`}
                         onClick={() => setSelectedColor(colorName)}
                       >
                       </button>
@@ -169,13 +169,13 @@ export default function Product({ data }) {
                   <div className="flex pb-3 items-center">
                     <div className='border flex'>
                       <button type='button' onClick={() => { setQuantity(quantity !== 1 ? quantity - 1 : 1) }} className='bg-gray-100 p-2'>
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" className="size-6">
                           <path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14" />
                         </svg>
                       </button>
                       <input className="text-center w-10" type="text" value={quantity} />
                       <button type="button" onClick={() => { setQuantity(quantity + 1) }} className='bg-gray-100 p-2'>
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" className="size-6">
                           <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
                         </svg>
                       </button>
