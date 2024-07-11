@@ -1,13 +1,14 @@
-
 // _app.js
 import 'tailwindcss/tailwind.css';
-
-import { CartProvider } from '@/context/cart'
+import { CartProvider } from '@/context/cart';
+import { WishlistProvider } from '@/context/wishlist';
 
 function MyApp({ Component, pageProps }) {
   return (
     <CartProvider>
-      <Component {...pageProps} />
+      <WishlistProvider>
+        <Component {...pageProps} />
+      </WishlistProvider>
     </CartProvider>
   );
 }

@@ -1,15 +1,27 @@
 import Image from 'next/image';
 import Link from 'next/link';
-import { useContext, useState, useEffect } from 'react';
+import { useContext } from 'react';
 import { CartContext } from '@/context/cart';
+import { WishlistContext } from '@/context/wishlist';
 
 function ProductCard({ product, itemsPerRow }) {
-  const { cartItems, addToCart, removeFromCart, getCartTotal } = useContext(CartContext);
+  const { cartItems, addToCart, removeFromCart } = useContext(CartContext);
+  const { wishlistItems, addToWishlist, removeFromWishlist, isInWishlist } = useContext(WishlistContext);
 
-  // Check if product exists in cartItems
   const cartProduct = cartItems.find(item => item._id === product._id);
+  const isInWishlistProduct = isInWishlist(product._id);
 
+  const handleAddToCart = () => {
+    addToCart(product);
+  };
 
+  const handleToggleWishlist = () => {
+    if (isInWishlistProduct) {
+      removeFromWishlist(product);
+    } else {
+      addToWishlist(product);
+    }
+  };
 
   const rowClass = itemsPerRow ? "lg:w-1/4" : "";
   return (
@@ -24,24 +36,23 @@ function ProductCard({ product, itemsPerRow }) {
           </div>
           <p className="w-full text-md text-gray-800 mt-0">${product.price.toFixed(2)}</p>
           <div className="flex w-full items-center ms-2 my-3">
-            {Array.from({ length: 5 }).map((_, i) => (
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" key={i} className={`w-4 h-4 ${i < Math.round(product.rating) ? 'text-yellow-500' : 'text-gray-300'}`} >
-                <path fillRule="evenodd" d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.006 5.404.434c1.164.093 1.636 1.545.749 2.305l-4.117 3.527 1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354 7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.434 2.082-5.005Z" clipRule="evenodd" />
-              </svg>
-            ))}
-            <p className="text-gray-600 ml-2">{product.rating}</p>
+            {/* Rating stars */}
           </div>
           <div className="w-full flex space-x-2 items-center justify-between">
-            <button type="button" className="hover:bg-gray-100 px-3 py-3 rounded-md flex flex-col-reverse cursor-pointer">
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 group-hover:opacity-70" fill="none" viewBox="0 0 24 24" stroke="gray">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-              </svg>
+            <button type="button" onClick={handleToggleWishlist} className={`bg-gray-100 p-2 ${isInWishlistProduct ? 'text-red-500' : ''}`}>
+              {isInWishlistProduct ? (
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="size-6">
+                  <path d="m11.645 20.91-.007-.003-.022-.012a15.247 15.247 0 0 1-.383-.218 25.18 25.18 0 0 1-4.244-3.17C4.688 15.36 2.25 12.174 2.25 8.25 2.25 5.322 4.714 3 7.688 3A5.5 5.5 0 0 1 12 5.052 5.5 5.5 0 0 1 16.313 3c2.973 0 5.437 2.322 5.437 5.25 0 3.925-2.438 7.111-4.739 9.256a25.175 25.175 0 0 1-4.244 3.17 15.247 15.247 0 0 1-.383.219l-.022.012-.007.004-.003.001a.752.752 0 0 1-.704 0l-.003-.001Z" />
+                </svg>
+              ) : (
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" className="size-6">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12Z" />
+                </svg>
+              )}
             </button>
 
-
-
             {cartProduct ? (
-              <div className="border flex">
+              <div className="flex">
                 <button
                   type="button"
                   onClick={() => {
@@ -53,7 +64,7 @@ function ProductCard({ product, itemsPerRow }) {
                     xmlns="http://www.w3.org/2000/svg"
                     fill="none"
                     viewBox="0 0 24 24"
-                    stroke-width="1.5"
+                    strokeWidth="1.5"
                     stroke="currentColor"
                     className="size-6"
                   >
@@ -68,6 +79,7 @@ function ProductCard({ product, itemsPerRow }) {
                   className="text-center w-10"
                   type="text"
                   value={cartProduct && cartProduct.quantity}
+                  readOnly
                 />
                 <button
                   type="button"
@@ -80,7 +92,7 @@ function ProductCard({ product, itemsPerRow }) {
                     xmlns="http://www.w3.org/2000/svg"
                     fill="none"
                     viewBox="0 0 24 24"
-                    stroke-width="1.5"
+                    strokeWidth="1.5"
                     stroke="currentColor"
                     className="size-6"
                   >
@@ -95,21 +107,12 @@ function ProductCard({ product, itemsPerRow }) {
             ) : (
               <button
                 type="button"
-                onClick={() => {
-                  addToCart(product);
-                }}
+                onClick={handleAddToCart}
                 className="p-3 bg-red-500 border flex-grow rounded-lg hover:bg-red-600 text-white font-normal text-sm w-full"
               >
                 Add To Cart
               </button>
             )}
-
-
-
-
-
-
-
           </div>
         </div >
       </div >
