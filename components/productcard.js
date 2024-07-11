@@ -26,7 +26,7 @@ function ProductCard({ product, itemsPerRow }) {
   const rowClass = itemsPerRow ? "lg:w-1/4" : "";
   return (
     <>
-      <div className={`w-full sm:w-1/2 md:w-1/3 ${rowClass} px-2 flex items-stretch justify-stretch`}>
+      <div className={`w-1/2 md:w-1/3 ${rowClass} px-2 flex items-stretch justify-stretch`}>
         <div className={`mb-2 flex items-center flex-col bg-white hover:shadow-lg w-full border rounded-xl p-3 cursor-pointer`}>
           <Link href={`/product/${product._id}`} className='relative block w-full h-48'>
             <Image src={product.images[0]} alt={product.thumbnail} layout="fill" className='hover:scale-105 transition' objectFit="contain" />
